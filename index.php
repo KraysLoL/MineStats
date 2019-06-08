@@ -2,10 +2,11 @@
     
     $params = array ( // Параметры.    В будущем как $key => $value
         '$uuid' => 'Игрок',
-        'stat.leaveGame' => 'Входов в игру',
+        'stat.deaths' => 'Количество смертей',
         'stat.timeSinceDeath' => 'Время последней смерти',
         'stat.playOneMinute' => 'Игровое время',
-        'stat.walkOneCm' => 'Пройдено пешком'
+        'stat.walkOneCm' => 'Пройдено пешком',
+        'eff' => 'Мастерство'
     );
     
     $statsdir = './stats'; //Директория со статой
@@ -31,16 +32,23 @@
             foreach($params  as  $key => $value) //Используя заданные параметры достаём нужную статистику об игроке
             {
                 if ($key !== '$uuid') //Если параметр это НЕ uuid 
-                    $playerdata[''.$value] = $jsondata->{''.$key}; //Выписываем нужную статистику с названием $key (stat.***)
+                    if ( isset($jsondata->{$key}) )
+                        $playerdata[$value] = $jsondata->{$key}; //Выписываем нужную статистику с названием $key (stat.***)
+                    else $playerdata[$value] = 0;
                 else
-                    $playerdata[''.$value] = $namedata->{$uuid} ; //Если это uuid то запишем ник а не статистику
+                    $playerdata[$value] = $namedata->{$uuid} ; //Если это uuid то запишем ник а не статистику
             }
+            
+            if ($playerdata{'Количество смертей'}) //Проверяем умирал ли игрок
+                $points = round( ( $playerdata{'Игровое время'} + $playerdata{'Время последней смерти'} ) / $playerdata{'Количество смертей'} ) ;
+            else $points = $playerdata{'Игровое время'} + $playerdata{'Время последней смерти'} ;
+            $playerdata['Мастерство'] = $points; //Добавляем очки
 
             $stats[]=$playerdata ; //Добавим игрока в массив всей статистики
         }
     }
 
-    usort($stats, create_function('$a, $b', "return \$a['Входов в игру'] > \$b['Входов в игру'];")); // Сортировка будущей таблицы по нужному столбцу
+    usort($stats, create_function('$a, $b', "return \$a['Мастерство'] < \$b['Мастерство'];")); // Сортировка будущей таблицы по нужному столбцу
 
     //Вывод таблицы
     echo 
@@ -56,12 +64,12 @@
 
     foreach($stats as $key => $Player) //Перебираем каждого игрока и создаём строку
     {
-        echo "<tr>";
+        echo '<tr>';
         foreach($Player  as  $secondkey => $value) //Перебираем каждую статистику игрока
         {
             echo "<td> $value </td>"; //Выводим её в ячейку таблицы
         }
-        echo "</tr>";
+        echo '</tr>';
     }
 
     echo '</table>';
