@@ -1,15 +1,6 @@
-<?php  
-    
-    $params = array ( // Параметры.    В будущем как $key => $value
-        '$uuid' => 'Игрок',
-        'stat.deaths' => 'Количество смертей',
-        'stat.timeSinceDeath' => 'Время последней смерти',
-        'stat.playOneMinute' => 'Игровое время',
-        'stat.walkOneCm' => 'Пройдено пешком',
-        'eff' => 'Мастерство'
-    );
-    
-    $statsdir = './stats'; //Директория со статой
+<?php
+
+    include 'params.php';
 
     $myfileslist = scandir($statsdir); //Сканируем директорию и записываем в массив
     
@@ -17,7 +8,6 @@
         if (strpos($myfilename, '.json') !== false)   //Проверяем заканчивается ли файл на .json 
             $uuidlist[] = substr($myfilename, 0, -5); //Создаём массив со всеми UUID
 
-    $namefile = ('usernamecache.json'); //Файл с никами и UUID
     $namestr = file_get_contents($namefile); //Получаем строку из файла
     $namedata = json_decode($namestr); //Декодируем json строку
 
@@ -48,13 +38,11 @@
         }
     }
 
-    usort($stats, create_function('$a, $b', "return \$a['Мастерство'] < \$b['Мастерство'];")); // Сортировка будущей таблицы по нужному столбцу
+    usort($stats, create_function('$a, $b', "return \$a['$sort'] < \$b['$sort'];")); // Сортировка будущей таблицы по нужному столбцу
 
     //Вывод таблицы
     echo 
-        '<caption>Статистика сервера</caption>
-        
-        <table>
+        '<table>
             <tr>';
     
     foreach($params  as  $key => $value) // По нужным параметрам создаются стобцы таблицы
