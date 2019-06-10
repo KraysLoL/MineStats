@@ -1,4 +1,18 @@
+    <a href="?page=ST"><img src="">ST СТАТИСТИКА</a></li>
+    <a href="?page=FHT"><img src="">FHT СТАТИСТИКА</a></li>
 <?php
+//Обработка ссылок
+if (isset($_GET['page']))
+{   //Обработка ссылок
+    switch($_GET['page']) 
+    {
+    case 'ST': $server = 'ST'; //Переменная для директории
+    break;
+
+    case 'FHT': $server = 'FHT'; //Переменная для директории
+    break;
+    }
+        
 
     include 'params.php';
 
@@ -61,4 +75,5 @@
     }
 
     echo '</table>';
+}
  ?>
