@@ -8,9 +8,8 @@
         'eff' => 'Мастерство'
     );
     
-    $statsdir = './stats'; //Директория со статой
-
-    $namefile = ('usernamecache.json'); //Файл с никами и UUID
+    $namefile = ("$server/usernamecache.json"); //Файл с никами и UUID
+    $statsdir = ("$server/stats"); //Директория со статой;
 
     $sort = 'Мастерство'; //Сортировка по..
 ?>
